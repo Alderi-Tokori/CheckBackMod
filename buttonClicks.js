@@ -1,6 +1,286 @@
+/**
+ * Abstract base Button class
+ */
+class Button {
+    constructor(selector, isVisible) {
+        if (this.constructor === Button) {
+            throw new Error("Abstract classes can't be instantiated.");
+        }
+
+        this.selector = selector;
+        this.isVisible = isVisible;
+        this.availableAt = 0;
+    }
+
+    // Will define the behaviour of the button when clicked
+    click() {
+        throw new Error("Method 'click()' must be implemented.");
+    }
+
+    // Will determine if the button is ready to be clicked
+    isReady() {
+        throw new Error("Method 'isReady()' must be implemented.");
+    }
+
+    // Returns the text to display on the button
+    innerText() {
+        throw new Error("Method 'innerText()' must be implemented.");
+    }
+
+    // Update the button's display
+    updateDisplay() {
+        document.querySelectorAll(this.selector).forEach((element) => {
+            this.isVisible() ? element.classList.remove("hidden") : element.classList.add("hidden");
+            element.disabled = !this.isReady();
+            element.innerText = this.innerText();
+        });
+    }
+}
+
+// XPButton class
+class XPButton extends Button {
+    constructor(selector, isVisible, baseXp, baseCooldown) {
+        super(selector, isVisible);
+        this.baseXp = baseXp;
+        this.baseCooldown = baseCooldown;
+    }
+
+    calculateTotalXp() {
+        return this.baseXp * (pets[game.selectedPet][1] * game.XPBoostEffect * game.itemXP * (1 + game.petsDiscovered / 100));
+    }
+
+    calculateTotalCooldown() {
+        return this.baseCooldown / (pets[game.selectedPet][2] * game.itemCooldown);
+    }
+
+    click() {
+        game.buttonClicks += 1;
+        game.XP += this.calculateTotalXp();
+        this.availableAt = Date.now() + this.calculateTotalCooldown() * 1000;
+
+        this.updateDisplay();
+    }
+
+    isReady() {
+        return this.availableAt <= Date.now();
+    }
+
+    innerText() {
+        if (!this.isReady()) {
+            return "Check back in " + numberToTime((this.availableAt - Date.now()) / 1000);
+        }
+
+        return "Gain " + numberShort(this.calculateTotalXp()) + "&nbsp;XP";
+    }
+}
+
+// XPBoostButton class
+class XPBoostButton extends Button {
+    constructor(selector, isVisible, baseXpBoost, baseCooldown, requiredLevel) {
+        super(selector, isVisible);
+        this.baseXpBoost = baseXpBoost;
+        this.baseCooldown = baseCooldown;
+        this.requiredLevel = requiredLevel;
+    }
+
+    calculateTotalXpBoost() {
+        return this.baseXpBoost * pets[game.selectedPet][4] * game.itemXPBoost;
+    }
+
+    calculateTotalCooldown() {
+        return this.baseCooldown / (game.itemCooldown);
+    }
+
+    click() {
+        if (game.items[12] === 1) { // Depends if you have the "xpboost buttons substract xp rather than resetting them"
+            game.lostXP += levelToXP(this.requiredLevel)
+            game.XP -= levelToXP(this.requiredLevel)
+        }
+        else {
+            game.lostXP += game.XP
+            game.XP = 0
+        }
+
+        game.XPBoost += this.calculateTotalXpBoost()
+        this.availableAt = Date.now() + this.calculateTotalCooldown() * 1000;
+
+        game.buttonClicks += 1
+
+        this.updateDisplay();
+    }
+
+    isReady() {
+        return this.availableAt <= Date.now() && game.level >= this.requiredLevel;
+    }
+
+    innerText() {
+        if (this.availableAt > Date.now()) {
+            return "Check back in " + numberToTime((this.availableAt - Date.now()) / 1000);
+        }
+
+        if (game.level < this.requiredLevel) {
+            return "Check back at level " + this.requiredLevel;
+        }
+
+        if (game.items[12] === 0) {
+            return "Gain " + numberShort(this.calculateTotalXpBoost()) + " XPBoost, but reset XP"
+        }
+
+        return "Gain " + numberShort(this.calculateTotalXpBoost()) + " XPBoost, but lose " + numberShort(levelToXP(this.requiredLevel)) + "&nbsp;XP"
+    }
+}
+
+// StatButton class
+class StatButton extends Button {
+    constructor(selector, isVisible, baseStatGain, baseCooldown) {
+        super(selector, isVisible);
+        this.baseStatGain = baseStatGain;
+        this.baseCooldown = baseCooldown;
+    }
+
+    calculateTotalHPGain() {
+        return 1 * this.baseStatGain * game.itemStat;
+    }
+
+    calculateTotalDamageGain() {
+        return 0.1 * this.baseStatGain * game.itemStat;
+    }
+
+    calculateTotalDefenseGain() {
+        return 0.01 * this.baseStatGain * game.itemStat;
+    }
+
+    click() {
+        game.HP += this.calculateTotalHPGain();
+        game.DMG += this.calculateTotalDamageGain();
+        game.DEF += this.calculateTotalDefenseGain();
+
+        this.availableAt = Date.now() + this.baseCooldown * 1000;
+
+        game.buttonClicks += 1
+
+        this.updateDisplay();
+    }
+
+    isReady() {
+        return this.availableAt <= Date.now();
+    }
+
+    innerText() {
+        if (!this.isReady()) {
+            return "Check back in " + numberToTime((this.availableAt - Date.now()) / 1000);
+        }
+
+        return "Gain " + numberShort(this.calculateTotalHPGain()) + " HP, " + numberShort(this.calculateTotalDamageGain()) + " DMG and " + numberShort(this.calculateTotalDefenseGain()) + " DEF";
+    }
+}
+
+// UnboxPetButton class
+class UnboxPetButton extends Button {
+    constructor(selector, isVisible, baseCooldown, xpBoostCost, coinCost, petRarityIndex, petRarityName) {
+        super(selector, isVisible);
+        this.baseCooldown = baseCooldown;
+        this.xpBoostCost = xpBoostCost;
+        this.coinCost = coinCost;
+        this.petRarityIndex = petRarityIndex;
+        this.petRarityName = petRarityName;
+    }
+
+    calculateNumberOfPetsToUnbox() {
+        if (this.petRarityIndex < 7) {
+            return 1;
+        }
+
+        return 1 + game.extraPetAmount;
+    }
+
+    click() {
+        unboxPet(this.petRarityIndex, this.calculateNumberOfPetsToUnbox());
+    }
+
+    isReady() {
+        return this.availableAt <= Date.now() && (game.XPBoost - this.xpBoostCost >= 1) && (game.coins - this.coinCost >= 0);
+    }
+
+    innerText() {
+        if (this.availableAt > Date.now()) {
+            return "Check back in " + numberToTime((this.availableAt - Date.now()) / 1000);
+        }
+
+        if (game.XPBoost - this.xpBoostCost < 1) {
+            return "Check back when you have at least " + numberShort(1 + this.xpBoostCost) + " XPBoost";
+        }
+
+        if (game.coins - this.coinCost < 0) {
+            return "Check back when you have at least " + numberShort(this.coinCost) + " coins";
+        }
+
+        let innerTextStr = "Unbox ";
+
+        if (this.calculateNumberOfPetsToUnbox() === 1) {
+            innerTextStr += "a ";
+        } else {
+            innerTextStr += this.calculateNumberOfPetsToUnbox() + " ";
+        }
+
+        innerTextStr += "random " + this.petRarityName + " pet";
+
+        let costStr = "";
+        if (this.xpBoostCost > 0) {
+            costStr += " for " + numberShort(this.xpBoostCost) + " XPBoost";
+        }
+
+        if (this.coinCost > 0) {
+            if (costStr !== "") {
+                costStr += " and ";
+            } else {
+                costStr += " for ";
+            }
+            costStr += numberShort(this.coinCost) + " coins";
+        }
+
+        innerTextStr += costStr;
+
+        return innerTextStr;
+    }
+}
+
+const buttons = [
+    new XPButton(".XPButton1", () => true, 1, 60, 0),
+    new XPButton(".XPButton2", () => game.level >= 2, 2, 300),
+    new XPButton(".XPButton3", () => game.level >= 3, 5, 1800),
+    new XPButton(".XPButton4", () => game.level >= 4, 10, 7200),
+    new XPButton(".XPButton5", () => game.level >= 6, 25, 43200),
+    new XPButton(".XPButton6", () => game.level >= 35, 50, 172800),
+    new XPButton(".XPButton7", () => game.level >= 70, 250, 604800),
+    new XPButton(".XPButton8", () => game.level >= 150, 100, 86400),
+    new XPButton(".XPButton9", () => game.level >= 250, 33, 21600),
+    new XPButton(".XPButton10", () => game.level >= 300, 15, 3600),
+    new UnboxPetButton(".unboxBasicPetsButton", () => game.level >= 8, 7200, 0, 0, 3, "basic"),
+    new UnboxPetButton(".unboxAdvancedPetsButton", () => game.level >= 12, 21600, 0, 0, 4, "advanced"),
+    new UnboxPetButton(".unboxEpicPetsButton", () => game.level >= 20, 64800, 0, 0, 5, "epic"),
+    new UnboxPetButton(".unboxLegendaryPetsButton", () => game.level >= 50, 172800, 0, 0, 6, "legendary"),
+    new UnboxPetButton(".unboxPrestigePetsButton", () => game.level >= 125, 3600, 0, 0, 7, "prestige"),
+    new UnboxPetButton(".unboxTranscendantPetsButton", () => game.level >= 350, 3600, 0, 0, 8, "transcendant"),
+    new UnboxPetButton(".unboxUniversalPetsButton", () => game.level >= 20000, 43200, 0, 0, 9, "universal"),
+    new XPBoostButton(".XPBoostButton1", () => game.level >= 100, 0.2, 3600, 100),
+    new XPBoostButton(".XPBoostButton2", () => game.level >= 200, 1, 3600, 200),
+    new XPBoostButton(".XPBoostButton3", () => game.level >= 400, 4, 3600, 400),
+    new StatButton(".StatButton1", () => game.level >= 500, 5, 3600),
+    new StatButton(".StatButton2", () => game.level >= 50000, 20, 21600),
+];
+
+
+
+
+
+
+
+
+
 const XPButtons = [ //The stats of every single xp button
   {name: "Test", xp: 0, cooldown: 0, cooldownID: 0, unlock: 0},
-  {name: "XPbutton1", xp: 1, cooldown: 60, cooldownID: 0, unlock: 0},
+  {name: "XPbutton1", xp: 1, cooldown: 60, cooldownID: 0, unlock: 0, testFunction: () => {console.log(this.xp)}},
   {name: "XPbutton2", xp: 2, cooldown: 300, cooldownID: 1, unlock: 1},
   {name: "XPbutton3", xp: 5, cooldown: 1800, cooldownID: 2, unlock: 2},
   {name: "XPbutton4", xp: 10, cooldown: 7200, cooldownID: 3, unlock: 3},
@@ -13,7 +293,7 @@ const XPButtons = [ //The stats of every single xp button
 ]
 
 //The code for any of the xp buttons
-function clickButton(x) {
+function clickXpButton(x) {
     if (game.buttonCooldowns[XPButtons[x].cooldownID] == 0) { //Checks the proper button is off cooldown
         game.buttonClicks += 1
         game.XP += XPButtons[x].xp * (pets[game.selectedPet][1] * game.XPBoostEffect * game.itemXP * (1 + game.petsDiscovered / 100)) //Assigns the xp that you have to get
@@ -29,7 +309,7 @@ const XPBoostButtons = [ //Stats of the xpboost buttons
   {name: "XPBbutton3", level: 400, xpboost: 4, cooldown: 3600, cooldownID: 19, unlock: 20},
 ]
 
-  function click2Button(x) { //Will work for any of them individually
+  function clickXpBoostButton(x) { //Will work for any of them individually
   if (game.XP >= levelToXP(XPBoostButtons[x].level) && game.buttonCooldowns[XPBoostButtons[x].cooldownID] == 0) { //Checks if the button is ready and got enough XP
       if (game.items[12] == 1) { //Depends if you have the "xpboost buttons substract xp rather than resetting them"
         game.lostXP += levelToXP(XPBoostButtons[x].level)
@@ -57,7 +337,7 @@ const StatButtons = [
   {name: "StatButton2", stats: 20, cooldown: 21600, cooldownID: 25, unlock: 24},
 ]
 
-  function click3Button(x) {
+  function clickStatsButton(x) {
     if (game.buttonCooldowns[StatButtons[x].cooldownID] == 0) {
       game.HP += 1 * StatButtons[x].stats * game.itemStat
       game.DMG += 0.1 * StatButtons[x].stats * game.itemStat

@@ -530,6 +530,10 @@ img {
   z-index: 3;
 }
 
+.hidden {
+  display: none !important;
+}
+
 /* Responsive stuff */
 @media (width <= 1120px) {
   #tabsContainer .button {

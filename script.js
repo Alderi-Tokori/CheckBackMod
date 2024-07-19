@@ -72,9 +72,9 @@ function setAutoSave() {
 //setInterval(save, 5000)
 
 function load() {
-	reset()
-	let loadgame = JSON.parse(localStorage.getItem("checkBackSave"))
-	if (loadgame != null) {loadGame(loadgame)}
+  reset()
+  let loadgame = JSON.parse(localStorage.getItem("checkBackSave"))
+  if (loadgame != null) {loadGame(loadgame)}
   updateSmall()
 }
 
