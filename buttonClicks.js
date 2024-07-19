@@ -17,6 +17,10 @@ class Button {
         throw new Error("Method 'click()' must be implemented.");
     }
 
+    mouseOver() {}
+
+    mouseOut() {}
+
     // Will determine if the button is ready to be clicked
     isReady() {
         throw new Error("Method 'isReady()' must be implemented.");
@@ -196,6 +200,14 @@ class UnboxPetButton extends Button {
 
     click() {
         unboxPet(this.petRarityIndex, this.calculateNumberOfPetsToUnbox());
+    }
+
+    mouseOver() {
+        displayPetRarities(this.petRarityIndex);
+    }
+
+    mouseOut() {
+        displayPetRarities(0);
     }
 
     isReady() {
