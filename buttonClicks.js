@@ -4,7 +4,7 @@
 class Button {
     constructor(
         selector,
-        isVisible,
+        isVisible = () => true,
         defaultInnerHtml = "",
         clickBehavior = () => {},
         mouseOverBehavior = () => {},
@@ -296,6 +296,44 @@ class DailyRewardButton extends Button {
     innerHtml() {
         return "Daily Reward";
     }
+
+    updateDisplay() {
+        super.updateDisplay();
+
+        document.querySelectorAll("#claimDailyRewardButton:not([disabled])").length > 0 ?
+            document.querySelectorAll(this.selector).forEach((element) => element.classList.add("flickering")) :
+            document.querySelectorAll(this.selector).forEach((element) => element.classList.remove("flickering"));
+    }
+}
+
+class ClaimDailyRewardButton extends Button {
+    constructor(selector) {
+        super(selector);
+        this.baseCooldown = 86400;
+    }
+
+    calculateTotalCooldown() {
+        return this.baseCooldown / game.itemCooldown;
+    }
+
+    click() {
+        claimDailyReward();
+        this.availableAt = Date.now() + this.calculateTotalCooldown() * 1000;
+
+        this.updateDisplay();
+    }
+
+    isReady() {
+        return this.availableAt <= Date.now();
+    }
+
+    innerHtml() {
+        if (!this.isReady()) {
+            return "Check back in " + numberToTime((this.availableAt - Date.now()) / 1000);
+        }
+
+        return "Claim daily reward";
+    }
 }
 
 // TabButton class
@@ -343,6 +381,7 @@ const buttons = [
     new TabButton(".XPBoostTabButton", () => game.level >= 100, "XP Boost Buttons", "XPBoostTab"),
     new TabButton(".StatsTabButton", () => game.level >= 500, "XP Buttons", "StatsTab"),
     new DailyRewardButton(".dailyRewardButton", () => game.level >= 8),
+    new ClaimDailyRewardButton("#claimDailyRewardButton"),
     new XPButton(".XPButton1", () => true, 1, 60),
     new XPButton(".XPButton2", () => game.level >= 2, 2, 300),
     new XPButton(".XPButton3", () => game.level >= 3, 5, 1800),
