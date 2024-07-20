@@ -363,7 +363,6 @@ function handleUnlocks() {
       if (i==5) {
         document.getElementById("selectedPetText").style.display = "block"
         document.getElementById("petsTabButton").style.display = "block"
-        document.getElementById("dailyRewardButton").style.display = "block"
         game.buttonCooldowns[6] = 0
         game.buttonCooldowns[9] = 0
       }
