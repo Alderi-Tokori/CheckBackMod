@@ -206,6 +206,7 @@ function loadGame(loadgame) {
   }
   countPets()
   game.sessionStart = Date.now()
+  buttons.filter(x => x.selector === ".XPTabButton").forEach(x => x.click())
 }
 
 

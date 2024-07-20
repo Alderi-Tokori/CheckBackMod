@@ -338,32 +338,19 @@ class ClaimDailyRewardButton extends Button {
 
 // TabButton class
 class TabButton extends Button {
-    constructor(selector, isVisible, tabName, tabClass) {
-        super(selector, isVisible, tabName);
+    constructor(selector, isVisible, tabName, tabClass, clickBehavior) {
+        super(selector, isVisible, tabName, clickBehavior);
         this.tabClass = tabClass;
     }
 
     click() {
+        super.click();
+
         document.querySelectorAll(".buttonsTab:not(." + this.tabClass + ")").forEach((tab) => {
             tab.classList.add("hidden");
         });
 
         document.querySelector("." + this.tabClass).classList.remove("hidden");
-
-        switch (this.tabClass) {
-            case "XPTab":
-                document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
-                break;
-            case "UnboxPetsTab":
-                document.getElementById("petRarities").innerHTML = "Crate cooldown modifiers:" + CrateMultis();
-                break;
-            case "XPBoostTab":
-                document.getElementById("petRarities").innerHTML = "XPBoost: "+ XPBoostMultis();
-                break;
-            case "StatsTab":
-                document.getElementById("petRarities").innerHTML = "Stat gain multipliers: "+ StatMultis();
-                break;
-        }
     }
 
     updateDisplay() {
@@ -376,10 +363,18 @@ class TabButton extends Button {
 }
 
 const buttons = [
-    new TabButton(".XPTabButton", () => game.highestLevel >= 8, "XP Buttons", "XPTab"),
-    new TabButton(".UnboxPetsTabButton", () => game.highestLevel >= 8, "Unbox new pets", "UnboxPetsTab"),
-    new TabButton(".XPBoostTabButton", () => game.highestLevel >= 100, "XP Boost Buttons", "XPBoostTab"),
-    new TabButton(".StatsTabButton", () => game.highestLevel >= 500, "XP Buttons", "StatsTab"),
+    new TabButton(".XPTabButton", () => game.highestLevel >= 8, "XP Buttons", "XPTab", () => {
+        document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
+    }),
+    new TabButton(".UnboxPetsTabButton", () => game.highestLevel >= 8, "Unbox new pets", "UnboxPetsTab", () => {
+        document.getElementById("petRarities").innerHTML = "Crate cooldown modifiers:" + CrateMultis();
+    }),
+    new TabButton(".XPBoostTabButton", () => game.highestLevel >= 100, "XP Boost Buttons", "XPBoostTab", () => {
+        document.getElementById("petRarities").innerHTML = "XPBoost: "+ XPBoostMultis();
+    }),
+    new TabButton(".StatsTabButton", () => game.highestLevel >= 500, "XP Buttons", "StatsTab", () => {
+        document.getElementById("petRarities").innerHTML = "Stat gain multipliers: "+ StatMultis();
+    }),
     new DailyRewardButton(".dailyRewardButton", () => game.highestLevel >= 8),
     new ClaimDailyRewardButton("#claimDailyRewardButton"),
     new XPButton(".XPButton1", () => true, 1, 60),

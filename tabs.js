@@ -1,5 +1,5 @@
 //This will control the tabs feature
-function displayTabStats(x) {
+function displayTabStats() {
     document.getElementById("petRarities").innerHTML = Stats()
 }
 
