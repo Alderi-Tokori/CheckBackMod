@@ -236,46 +236,6 @@ function loadGame(loadgame) {
 
 //Updates variables and text
 function updateSmall() {
-  //Sets whether the buttons are disabled or not
-for (let i=1;i<XPButtons.length;i++) {
-  if (game.buttonCooldowns[XPButtons[i].cooldownID] > 0) {
-    document.getElementById(XPButtons[i].name).disabled = true
-    document.getElementById(XPButtons[i].name).innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[XPButtons[i].cooldownID])
-  }
-  else {
-    document.getElementById(XPButtons[i].name).disabled = false
-    document.getElementById(XPButtons[i].name).innerHTML = "Gain " + numberShort((XPButtons[i].xp * pets[game.selectedPet][1] * game.XPBoostEffect * game.itemXP * (1 + game.petsDiscovered / 100))) + " XP"
-  }
-}
-
-  //These could definitely be condensed into one thing! - Don't worry Demonin, they will
-  if (game.buttonCooldowns[6] > 0) {
-    document.getElementById("unboxButton1").disabled = true
-    document.getElementById("unboxButton1").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[6])
-  }
-  else {
-    document.getElementById("unboxButton1").disabled = false
-    if (game.items[15] == 1) {document.getElementById("unboxButton1").innerHTML = "Unbox a random basic pet. Auto: " + numberToTime(game.buttonCooldowns[23])}
-    else {document.getElementById("unboxButton1").innerHTML = "Unbox a random basic pet"}
-  }
-  if (game.buttonCooldowns[7] > 0) {
-    document.getElementById("unboxButton2").disabled = true
-    document.getElementById("unboxButton2").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[7])
-  }
-  else {
-    document.getElementById("unboxButton2").disabled = false
-    if (game.items[15] == 1) {document.getElementById("unboxButton2").innerHTML = "Unbox a random advanced pet. Auto: " + numberToTime(game.buttonCooldowns[23])}
-    else {document.getElementById("unboxButton2").innerHTML = "Unbox a random advanced pet"}
-  }
-  if (game.buttonCooldowns[8] > 0) {
-    document.getElementById("unboxButton3").disabled = true
-    document.getElementById("unboxButton3").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[8])
-  }
-  else {
-    document.getElementById("unboxButton3").disabled = false
-    if (game.items[15] == 1) {document.getElementById("unboxButton3").innerHTML = "Unbox a random epic pet. Auto: " + numberToTime(game.buttonCooldowns[23])}
-    else {document.getElementById("unboxButton3").innerHTML = "Unbox a random epic pet"}
-  }
   if (game.buttonCooldowns[9] > 0) {
     document.getElementById("claimDailyRewardButton").disabled = true
     document.getElementById("claimDailyRewardButton").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[9])
@@ -286,81 +246,6 @@ for (let i=1;i<XPButtons.length;i++) {
     document.getElementById("claimDailyRewardButton").innerHTML = "Claim daily reward"
     if (Date.now() % 600 < 300) {document.getElementById("dailyRewardButton").style.border = "0.3vh solid #80f"}
     else {document.getElementById("dailyRewardButton").style.border = "0.3vh solid #d9f"}
-  }
-  if (game.buttonCooldowns[10] > 0) {
-    document.getElementById("unboxButton4").disabled = true
-    document.getElementById("unboxButton4").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[10])
-  }
-  else {
-    document.getElementById("unboxButton4").disabled = false
-    if (game.items[15] == 1) {document.getElementById("unboxButton4").innerHTML = "Unbox a random legendary pet. Auto: " + numberToTime(game.buttonCooldowns[23])}
-    else {document.getElementById("unboxButton4").innerHTML = "Unbox a random legendary pet"}
-  }
-  if (game.buttonCooldowns[12] > 0) {
-    document.getElementById("XPBbutton1").disabled = true
-    document.getElementById("XPBbutton1").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[12])
-  }
-  else {
-    if (game.items[12] == 0) {
-    document.getElementById("XPBbutton1").disabled = false
-    document.getElementById("XPBbutton1").innerHTML = "Gain " + numberShort(0.2 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but reset XP"
-    }
-    else {
-      document.getElementById("XPBbutton1").disabled = false
-      document.getElementById("XPBbutton1").innerHTML = "Gain " + numberShort(0.2 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but loose 21.2k XP"
-    }
-  }
-  if (game.buttonCooldowns[13] > 0) {
-    document.getElementById("unboxButton5").disabled = true
-    document.getElementById("unboxButton5").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[13])
-  }
-  else {
-    document.getElementById("unboxButton5").disabled = false
-    document.getElementById("unboxButton5").innerHTML = "Unbox a random prestige pet for 0.1 XPBoost"
-  }
-  if (game.buttonCooldowns[15] > 0) {
-    document.getElementById("XPBbutton2").disabled = true
-    document.getElementById("XPBbutton2").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[15])
-  }
-  else {
-    if (game.items[12] == 0) {
-      document.getElementById("XPBbutton2").disabled = false
-      document.getElementById("XPBbutton2").innerHTML = "Gain " + numberShort(1 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but reset XP"
-      }
-      else {
-        document.getElementById("XPBbutton2").disabled = false
-        document.getElementById("XPBbutton2").innerHTML = "Gain " + numberShort(1 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but loose 75.6k XP"
-      }
-  }
-  if (game.buttonCooldowns[18] > 0) {
-    document.getElementById("unboxButton6").disabled = true
-    document.getElementById("unboxButton6").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[18])
-  }
-  else {
-    document.getElementById("unboxButton6").disabled = false
-    document.getElementById("unboxButton6").innerHTML = "Unbox a random transcendant pet for 0.25 XPBoost"
-  }
-  if (game.buttonCooldowns[19] > 0) {
-    document.getElementById("XPBbutton3").disabled = true
-    document.getElementById("XPBbutton3").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[19])
-  }
-  else {
-    if (game.items[12] == 0) {
-      document.getElementById("XPBbutton3").disabled = false
-      document.getElementById("XPBbutton3").innerHTML = "Gain " + numberShort(4 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but reset XP"
-      }
-      else {
-        document.getElementById("XPBbutton3").disabled = false
-        document.getElementById("XPBbutton3").innerHTML = "Gain " + numberShort(4 * pets[game.selectedPet][4] * game.itemXPBoost) + " XPBoost, but loose 267.9k XP"
-      }
-  }
-  if (game.buttonCooldowns[20] > 0) {
-    document.getElementById("StatButton1").disabled = true
-    document.getElementById("StatButton1").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[20])
-  }
-  else {
-    document.getElementById("StatButton1").disabled = false
-    document.getElementById("StatButton1").innerHTML = "Gain " + numberShort(5 * game.itemStat) + " HP, " + numberShort(0.5 * game.itemStat) + " DMG and " + numberShort(0.05 * game.itemStat) + " DEF"
   }
   if (game.buttonCooldowns[21] > 0) {
     document.getElementById("fight1Button").disabled = true
@@ -378,39 +263,6 @@ for (let i=1;i<XPButtons.length;i++) {
     document.getElementById("fight2Button").disabled = false
     document.getElementById("fight2Button").innerHTML = "Fight an area 2 foe "
   }
-
-  if (XPTab() == true) {
-    document.getElementById("XPTab").classList.add("flickering")
-  }
-  else {
-    document.getElementById("XPTab").classList.remove("flickering")
-  }
-
-  if (XPBoostTab() == true) {
-    document.getElementById("XPBoostTab").classList.add("flickering")
-  }
-  else {
-    document.getElementById("XPBoostTab").classList.remove("flickering")
-  }
-
-  if (StatTab() == true) {
-    document.getElementById("StatsTab").classList.add("flickering")
-  }
-  else {
-    document.getElementById("StatsTab").classList.remove("flickering")
-  }
-
-  if (CratesTab() == true) {
-    document.getElementById("CratesTab").classList.add("flickering")
-  }
-  else {
-    document.getElementById("CratesTab").classList.remove("flickering")
-  }
-
- if (FightingTab() == true) {
-  document.getElementById("fightingTabButton").classList.add("flickering")
- }
- else {document.getElementById("fightingTabButton").classList.remove("flickering")}
 
  if (game.buttonCooldowns[23] > 0) {}
  else {autoPets()}

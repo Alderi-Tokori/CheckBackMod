@@ -30,42 +30,48 @@
   <div id="mainContainer">
     <div id="tabsContainer">
       <p id="nextUnlockLevel"></p>
-      <button class="button" id="XPTab" style="display: none" onclick="tab(1)">XP Buttons</button>
-      <button class="button" id="petsTabButton" style="display: none" onclick="openClosePetsTab()">Pets</button>
-      <button class="button" id="CratesTab" style="display: none" onclick="tab(2)">Unbox new pets</button>
-      <button class="button" id="XPBoostTab" style="display: none" onclick="tab(3)">XP Boost Buttons</button>
-      <button class="button" id="enemiesTabButton" style="display: none" onclick="openCloseEnemiesTab()">Enemies</button>
-      <button class="button" id="StatsTab" style="display: none" onclick="tab(4)">Stat Buttons</button>
-      <button class="button" id="fightingTabButton" style="display: none" onclick="openCloseFightingTab()">Fighting</button>
-      <button class="button" id="shopTabButton" style="display: none" onclick="openCloseShopTab()">Shop</button>
+      <button class="button XPTabButton hidden" id="XPTab">XP Buttons</button>
+      <button class="button hidden" id="petsTabButton" onclick="openClosePetsTab()">Pets</button>
+      <button class="button UnboxPetsTabButton hidden" id="CratesTab">Unbox new pets</button>
+      <button class="button XPBoostTabButton hidden" id="XPBoostTab">XP Boost Buttons</button>
+      <button class="button hidden" id="enemiesTabButton" onclick="openCloseEnemiesTab()">Enemies</button>
+      <button class="button StatsTabButton hidden" id="StatsTab">Stat Buttons</button>
+      <button class="button hidden" id="fightingTabButton" onclick="openCloseFightingTab()">Fighting</button>
+      <button class="button hidden" id="shopTabButton" onclick="openCloseShopTab()">Shop</button>
     </div>
 
-    <div id="buttonsContainer">
-      <button class="button XPbutton1" id="XPbutton1" onclick="clickXpButton(1)">Gain 1 XP</button>
-      <button class="button XPbutton2" id="XPbutton2" style="display: none" onclick="clickXpButton(2)">Gain 2 XP</button>
-      <button class="button XPbutton3" id="XPbutton3" style="display: none" onclick="clickXpButton(3)">Gain 5 XP</button>
-      <button class="button XPbutton4" id="XPbutton4" style="display: none" onclick="clickXpButton(4)">Gain 10 XP</button>
-      <button class="button XPbutton5" id="XPbutton5" style="display: none" onclick="clickXpButton(5)">Gain 25 XP</button>
-      <button class="button XPbutton6" id="XPbutton6" style="display: none" onclick="clickXpButton(6)">Gain 50 XP</button>
-      <button class="button XPbutton7" id="XPbutton7" style="display: none" onclick="clickXpButton(7)">Gain 250 XP</button>
-      <button class="button XPbutton8" id="XPbutton8" style="display: none" onclick="clickXpButton(8)">Gain 100 XP</button>
-      <button class="button XPbutton9" id="XPbutton9" style="display: none" onclick="clickXpButton(9)">Gain 33 XP</button>
-      <button class="button XPbutton10" id="XPbutton10" style="display: none" onclick="clickXpButton(10)">Gain 15 XP</button>
+    <div class="buttonsTab XPTab">
+      <button class="button XPButton1" id="XPbutton1">Gain 1 XP</button>
+      <button class="button XPButton2 hidden" id="XPbutton2">Gain 2 XP</button>
+      <button class="button XPButton3 hidden" id="XPbutton3">Gain 5 XP</button>
+      <button class="button XPButton4 hidden" id="XPbutton4">Gain 10 XP</button>
+      <button class="button XPButton5 hidden" id="XPbutton5">Gain 25 XP</button>
+      <button class="button XPButton6 hidden" id="XPbutton6">Gain 50 XP</button>
+      <button class="button XPButton7 hidden" id="XPbutton7">Gain 250 XP</button>
+      <button class="button XPButton8 hidden" id="XPbutton8">Gain 100 XP</button>
+      <button class="button XPButton9 hidden" id="XPbutton9">Gain 33 XP</button>
+      <button class="button XPButton10 hidden" id="XPbutton10">Gain 15 XP</button>
+    </div>
 
-      <button class="button XPBoostButton1" id="XPBbutton1" style="display: none" onclick="clickXpBoostButton(1)">Gain 0.2 XPBoost</button>
-      <button class="button XPBoostButton2" id="XPBbutton2" style="display: none" onclick="clickXpBoostButton(2)">Gain 1 XPBoost</button>
-      <button class="button XPBoostButton3" id="XPBbutton3" style="display: none" onclick="clickXpBoostButton(3)">Gain 4 XPBoost</button>
+    <div class="buttonsTab UnboxPetsTab hidden">
+      <button class="button unboxBasicPetsButton hidden" id="unboxButton1">Unbox a random basic pet</button>
+      <button class="button unboxAdvancedPetsButton hidden" id="unboxButton2">Unbox a random advanced pet</button>
+      <button class="button unboxEpicPetsButton hidden" id="unboxButton3">Unbox a random epic pet</button>
+      <button class="button unboxLegendaryPetsButton hidden" id="unboxButton4">Unbox a random legendary pet</button>
+      <button class="button unboxPrestigePetsButton hidden" id="unboxButton5">Unbox a random prestige pet</button>
+      <button class="button unboxTranscendantPetsButton hidden" id="unboxButton6">Unbox a random transcendant pet</button>
+      <button class="button unboxUniversalPetsButton hidden" id="unboxButton7">Unbox a random universal pet</button>
+    </div>
 
-      <button class="button StatsButton1" id="StatButton1" style="display: none" onclick="clickStatsButton(1)">Gain 5 Stats</button>
-      <button class="button StatsButton2" id="StatButton2" style="display: none" onclick="clickStatsButton(2)">Gain 20 Stats</button>
+    <div class="buttonsTab XPBoostTab hidden">
+      <button class="button XPBoostButton1 hidden" id="XPBbutton1">Gain 0.2 XPBoost</button>
+      <button class="button XPBoostButton2 hidden" id="XPBbutton2">Gain 1 XPBoost</button>
+      <button class="button XPBoostButton3 hidden" id="XPBbutton3">Gain 4 XPBoost</button>
+    </div>
 
-      <button class="button unboxBasicPetsButton" id="unboxButton1" style="display: none" onclick="unboxPet(3, y=(1 + game.extraPetAmount))" onmouseover="displayPetRarities(3)" onmouseout="displayPetRarities(0)">Unbox a random basic pet</button>
-      <button class="button unboxAdvancedPetsButton" id="unboxButton2" style="display: none" onclick="unboxPet(4, y=(1 + game.extraPetAmount))" onmouseover="displayPetRarities(4)" onmouseout="displayPetRarities(0)">Unbox a random advanced pet</button>
-      <button class="button unboxEpicPetsButton" id="unboxButton3" style="display: none" onclick="unboxPet(5, y=(1 + game.extraPetAmount))" onmouseover="displayPetRarities(5)" onmouseout="displayPetRarities(0)">Unbox a random epic pet</button>
-      <button class="button unboxLegendaryPetsButton" id="unboxButton4" style="display: none" onclick="unboxPet(6, y=(1 + game.extraPetAmount))" onmouseover="displayPetRarities(6)" onmouseout="displayPetRarities(0)">Unbox a random legendary pet</button>
-      <button class="button unboxPrestigePetsButton" id="unboxButton5" style="display: none" onclick="unboxPet(7)" onmouseover="displayPetRarities(7)" onmouseout="displayPetRarities(0)">Unbox a random prestige pet</button>
-      <button class="button unboxTranscendantPetsButton" id="unboxButton6" style="display: none" onclick="unboxPet(8)" onmouseover="displayPetRarities(8)" onmouseout="displayPetRarities(0)">Unbox a random transcendant pet</button>
-      <button class="button unboxUniversalPetsButton" id="unboxButton7" style="display: none" onclick="unboxPet(9)" onmouseover="displayPetRarities(9)" onmouseout="displayPetRarities(0)">Unbox a random universal pet</button>
+    <div class="buttonsTab StatsTab hidden">
+      <button class="button StatsButton1 hidden" id="StatButton1">Gain 5 Stats</button>
+      <button class="button StatsButton2 hidden" id="StatButton2">Gain 20 Stats</button>
     </div>
 
     <div id="infosContainer">
@@ -85,7 +91,7 @@
         <button class="themeButton" style="background-color: #d75; border: 0.3vh solid #422; color: #422; display: none" onclick="changeTheme(6)">Red</button>
       </div>
 
-      <button class="button" id="dailyRewardButton" onclick="openCloseDailyRewardTab()">Daily reward</button>
+      <button class="button dailyRewardButton hidden" id="dailyRewardButton">Daily reward</button>
     </div>
 
     <div id="rightFooterColumn">
@@ -183,6 +189,7 @@
     </div>
   </div>
 
+  <script src="modals.js"></script>
   <script src="constants.js"></script>
   <script src="fighting.js"></script>
   <script src="shop.js"></script>
@@ -192,7 +199,6 @@
   <script src="tabs.js"></script>
   <script src="message.js"></script>
   <script src="script.js"></script>
-  <script src="modals.js"></script>
   <script defer>setAutoSave()</script>
 </body>
 
