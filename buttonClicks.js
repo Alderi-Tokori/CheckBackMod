@@ -217,8 +217,15 @@ class UnboxPetButton extends Button {
         return 1 + game.extraPetAmount;
     }
 
+    calculateTotalCooldown() {
+        return this.baseCooldown / (pets[game.selectedPet][3] * game.itemCooldown);
+    }
+
     click() {
         unboxPet(this.petRarityIndex, this.calculateNumberOfPetsToUnbox());
+        this.availableAt = Date.now() + this.calculateTotalCooldown() * 1000;
+
+        this.updateDisplay();
     }
 
     mouseOver() {
@@ -304,6 +311,21 @@ class TabButton extends Button {
         });
 
         document.querySelector("." + this.tabClass).classList.remove("hidden");
+
+        switch (this.tabClass) {
+            case "XPTab":
+                document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
+                break;
+            case "UnboxPetsTab":
+                document.getElementById("petRarities").innerHTML = "Crate cooldown modifiers:" + CrateMultis();
+                break;
+            case "XPBoostTab":
+                document.getElementById("petRarities").innerHTML = "XPBoost: "+ XPBoostMultis();
+                break;
+            case "StatsTab":
+                document.getElementById("petRarities").innerHTML = "Stat gain multipliers: "+ StatMultis();
+                break;
+        }
     }
 
     updateDisplay() {
@@ -348,7 +370,6 @@ const buttons = [
 onDomReady(function () {
     // Bind events for all buttons
     buttons.forEach((button) => {
-        console.log(button);
         button.bindEvents();
     });
 

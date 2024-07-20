@@ -193,9 +193,21 @@ img {
   cursor: default;
 }
 
-#dailyRewardButton {
-  display: none;
+@keyframes dailyReward-flickering {
+  from {border-color: #80f;}
+  to {border-color: #d9f;}
+}
+
+.button.dailyRewardButton {
   z-index: 2;
+  border: 0.3vh solid #80f;
+}
+
+.button.dailyRewardButton.flickering {
+    animation-name: dailyReward-flickering;
+    animation-iteration-count: infinite;
+    animation-duration: 300ms;
+    animation-direction: alternate;
 }
 
 #dailyRewardDiv {
