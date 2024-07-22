@@ -174,14 +174,8 @@ function displayPetRarities(x) {
 
 }
 
-function openClosePetsTab() {
-    if (document.getElementById("petsDiv").style.display == "block") {
-        document.getElementById("petsDiv").style.display = "none"
-        document.getElementById("petsListInner").innerHTML = ""
-    } else {
-        document.getElementById("petsDiv").style.display = "block"
-        displayPets()
-    }
+function closePetsTab() {
+    document.getElementById("petsDiv").classList.add("hidden");
 }
 
 //Adds the squares for all the pets to the pets tab
@@ -252,4 +246,3 @@ function setSelectedPet(x) {
         document.getElementById("selectedPetImg").src = "img/pets/" + x + ".png"
     }
 }
-  

@@ -219,7 +219,6 @@ img {
   max-width: 60vh;
   height: 60vh;
   background-color: #444;
-  display: none;
   border: 0.8vh outset #555;
   text-align: center;
 }
@@ -275,7 +274,6 @@ img {
   width: 70%;
   height: 70%;
   background-color: #444;
-  display: none;
   border: 0.8vh outset #555;
 }
 
@@ -360,7 +358,6 @@ img {
   width: 70%;
   height: 70%;
   background-color: #444;
-  display: none;
   border: 0.8vh outset #555;
 }
 
@@ -402,7 +399,6 @@ img {
   max-width: 60vh;
   height: 80vh;
   background-color: #444;
-  display: none;
   border: 0.8vh outset #555;
   text-align: center;
 }
@@ -455,7 +451,6 @@ img {
   width: 70%;
   height: 70%;
   background-color: #444;
-  display: none;
   border: 0.8vh outset #555;
 }
 

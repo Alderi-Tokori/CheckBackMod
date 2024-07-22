@@ -31,13 +31,13 @@
     <div id="tabsContainer">
       <p id="nextUnlockLevel"></p>
       <button class="button XPTabButton hidden">XP Buttons</button>
-      <button class="button hidden" id="petsTabButton" onclick="openClosePetsTab()">Pets</button>
+      <button class="button petsModalButton hidden">Pets</button>
       <button class="button UnboxPetsTabButton hidden">Unbox new pets</button>
       <button class="button XPBoostTabButton hidden">XP Boost Buttons</button>
-      <button class="button hidden" id="enemiesTabButton" onclick="openCloseEnemiesTab()">Enemies</button>
+      <button class="button enemiesModalButton hidden">Enemies</button>
       <button class="button StatsTabButton hidden">Stat Buttons</button>
-      <button class="button hidden" id="fightingTabButton" onclick="openCloseFightingTab()">Fighting</button>
-      <button class="button hidden" id="shopTabButton" onclick="openCloseShopTab()">Shop</button>
+      <button class="button fightingModalButton hidden">Fighting</button>
+      <button class="button shopModalButton hidden">Shop</button>
     </div>
 
     <div class="buttonsTab XPTab">
@@ -75,7 +75,7 @@
     </div>
 
     <div id="infosContainer">
-      <p id="selectedPetText"><span id="selectedPetUpperText">Current selected pet:<br><span id="selectedPet" style="font-weight: bold">None</span><br></span><img id="selectedPetImg" src="img/pets/0.png" style="width: 8vh; display: none"><br><br><span id="petRarities"></span></p>
+      <p class="hidden" id="selectedPetText"><span id="selectedPetUpperText">Current selected pet:<br><span id="selectedPet" style="font-weight: bold">None</span><br></span><img id="selectedPetImg" src="img/pets/0.png" style="width: 8vh; display: none"><br><br><span id="petRarities"></span></p>
     </div>
   </div>
 
@@ -108,7 +108,7 @@
     </div>
   </div>
 
-  <div id="dailyRewardDiv">
+  <div class="hidden" id="dailyRewardDiv">
     <div class="modalHeader">
       <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Daily reward</p>
       <p style='font-size: 1.6vh; color: #ccc; margin: auto; width: 50%'>Check back on this tab each day for a special reward!</p>
@@ -123,30 +123,30 @@
       <div class="dayBox" style="opacity: 0.5" onmouseover="displayDailyRewardRarities(3)" onmouseout="displayDailyRewardRarities(0)"></div>
       <div class="dayBox" style="opacity: 0.25" onmouseover="displayDailyRewardRarities(4)" onmouseout="displayDailyRewardRarities(0)"></div>
     </div>
-    <button class="closeButton" onclick="openCloseDailyRewardTab()">Close</button>
+    <button class="closeButton" onclick="closeDailyRewardTab()">Close</button>
   </div>
   
-  <div id="petsDiv">
+  <div class="hidden" id="petsDiv">
     <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Pets</p>
     <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on a pet you've unlocked to select it. Each discovered pet gives +1% XP gains</p>
-    <button class="closeButton" onclick="openClosePetsTab()">Close</button>
+    <button class="closeButton" onclick="closePetsTab()">Close</button>
     <div id="petsList">
       <div id="petsListInner"></div>
     </div>
     <div id="petInfo"></div>
   </div>
 
-  <div id="enemiesDiv">
+  <div class="hidden" id="enemiesDiv">
     <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Enemies</p>
     <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Hover over the enemies to see their stats</p>
-    <button class="closeButton" onclick="openCloseEnemiesTab()">Close</button>
+    <button class="closeButton" onclick="closeEnemiesTab()">Close</button>
     <div id="enemiesList">
       <div id="enemiesListInner"></div>
     </div>
     <div id="enemiesInfo"></div>
   </div>
 
-  <div id="fightingDiv">
+  <div class="hidden" id="fightingDiv">
     <div class="modalHeader">
       <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Fighting</p>
       <p style='font-size: 1.6vh; color: #ccc; margin: auto; width: 50%'>Fight different types of enemies and get loot</p>
@@ -165,13 +165,13 @@
       <div class="dropBox" style="left: 45vh; color: #bff"></div>
     </div>
     <div id="enemiesDisplayInfo"></div>
-    <button class="closeButton" onclick="openCloseFightingTab()">Close</button>
+    <button class="closeButton" onclick="closeFightingTab()">Close</button>
   </div>
 
-  <div id="shopDiv">
+  <div class="hidden" id="shopDiv">
     <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Shop</p>
     <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on an item to buy it</p>
-    <button class="closeButton" onclick="openCloseShopTab()">Close</button>
+    <button class="closeButton" onclick="closeShopTab()">Close</button>
     <div id="shopList">
       <div id="shopListInner"></div>
     </div>

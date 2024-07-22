@@ -20,7 +20,7 @@ onDomReady(function () {
 
         if (key === "Escape") {
             document.querySelectorAll("#dailyRewardDiv, #petsDiv, #enemiesDiv, #fightingDiv, #shopDiv").forEach((el) => {
-                el.style.display = "none";
+                el.classList.add("hidden");
             });
 
             document.getElementById("shopListInner").innerHTML = "";
