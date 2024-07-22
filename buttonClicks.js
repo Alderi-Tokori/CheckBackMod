@@ -209,7 +209,7 @@ class UnboxPetButton extends Button {
     }
 
     calculateNumberOfPetsToUnbox() {
-        if (this.petRarityIndex < 7) {
+        if (this.petRarityIndex >= 7) {
             return 1;
         }
 
@@ -428,6 +428,17 @@ class AreaFightButton extends Button {
     }
 }
 
+class ThemeButton extends Button {
+    constructor(selector, isVisible, themeName) {
+        super(selector, isVisible, themeName);
+        this.themeName = themeName;
+    }
+
+    click() {
+        changeTheme(this.themeName);
+    }
+}
+
 const buttons = [
     new TabButton(".XPTabButton", () => game.highestLevel >= 8, "XP Buttons", "XPTab", () => {
         document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
@@ -491,6 +502,12 @@ const buttons = [
     new AreaFightButton("#fight1Button", () => game.highestLevel >= 500, 1, 3600),
     new AreaFightButton("#fight2Button", () => game.items[6] > 0, 2, 21600),
     new AreaFightButton("#fight3Button", () => game.highestLevel >= 100000, 3, 86400),
+    new ThemeButton(".lightThemeButton", () => true, "Light", 1),
+    new ThemeButton(".darkThemeButton", () => true, "Dark", 2),
+    new ThemeButton(".neonThemeButton", () => game.highestLevel >= 5, "Neon", 3),
+    new ThemeButton(".greenThemeButton", () => game.highestLevel >= 18, "Green", 4),
+    new ThemeButton(".purpleThemeButton", () => game.highestLevel >= 18, "Purple", 5),
+    new ThemeButton(".redThemeButton", () => game.highestLevel >= 18, "Red", 6),
 ];
 
 onDomReady(function () {
@@ -506,7 +523,7 @@ onDomReady(function () {
         });
 
         // Checks if we should display selectedPetText
-        document.querySelectorAll(".UnboxPetsTab .button:not(.hidden):not([disabled])").length > 0 ?
+        document.querySelectorAll(".UnboxPetsTab .button:not(.hidden)").length > 0 ?
             document.getElementById("selectedPetText").classList.remove("hidden") :
             document.getElementById("selectedPetText").classList.add("hidden");
     }, 100);

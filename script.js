@@ -210,17 +210,11 @@ function loadGame(loadgame) {
         document.getElementById("selectedPetImg").src = "img/pets/" + game.selectedPet + ".png"
     }
 
+    if (Number.isInteger(game.currentTheme)) {
+        game.currentTheme = "Dark";
+    }
     changeTheme(game.currentTheme)
 
-    if (game.unlocks >= 4) {
-        document.getElementsByClassName("themeButton")[2].style.display = "inline-block"
-    }
-
-    if (game.unlocks >= 8) {
-        document.getElementsByClassName("themeButton")[3].style.display = "inline-block"
-        document.getElementsByClassName("themeButton")[4].style.display = "inline-block"
-        document.getElementsByClassName("themeButton")[5].style.display = "inline-block"
-    }
     if (game.unlocks >= 13) {
         updateXPBoost()
     }
@@ -442,21 +436,9 @@ function handleUnlocks() {
     }
 }
 
-function changeTheme(x) {
-    game.currentTheme = x
-    if (x == 1) {
-        document.getElementById("themeLink").href = "themes/themeLight.css"
-    } else if (x == 2) {
-        document.getElementById("themeLink").href = "themes/themeDark.css"
-    } else if (x == 3) {
-        document.getElementById("themeLink").href = "themes/themeNeon.css"
-    } else if (x == 4) {
-        document.getElementById("themeLink").href = "themes/themeGreen.css"
-    } else if (x == 5) {
-        document.getElementById("themeLink").href = "themes/themePurple.css"
-    } else if (x == 6) {
-        document.getElementById("themeLink").href = "themes/themeRed.css"
-    }
+function changeTheme(themeName) {
+    game.currentTheme = themeName;
+    document.getElementById("themeLink").href = "themes/theme" + themeName + ".css";
 }
 
 function Stats() {
