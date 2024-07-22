@@ -366,8 +366,6 @@ function xpShort(x) {
     return result
 }
 
-//Handles clicking the buttons
-
 
 //This will simply update the XPBoost display
 function updateXPBoost() {
