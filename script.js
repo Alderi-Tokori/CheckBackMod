@@ -199,7 +199,7 @@ function help() {
 
 function loadGame(loadgame) {
     // Merge game base object and loaded game object
-    game = {...game, ...loadgame}
+    game = deepMerge(game, loadgame);
 
     if (game.selectedPet == 0) {
         document.getElementById("selectedPet").innerHTML = "None"
@@ -229,12 +229,6 @@ function loadGame(loadgame) {
     }
     if (game.unlocks >= 22) {
         updateShopBoosts()
-    }
-    if (game.itemUnlocks >= 1) {
-        document.getElementById("fight2Button").style.display = "block"
-    }
-    if (game.unlocks >= 25) {
-        document.getElementById("fight3Button").style.display = "block"
     }
 
     for (let i = 0; i < pets.length; i++) {
@@ -271,32 +265,9 @@ function loadGame(loadgame) {
 
 //Updates variables and text
 function updateSmall() {
-    if (game.buttonCooldowns[21] > 0) {
-        document.getElementById("fight1Button").disabled = true
-        document.getElementById("fight1Button").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[21])
-    } else {
-        document.getElementById("fight1Button").disabled = false
-        document.getElementById("fight1Button").innerHTML = "Fight an area 1 foe "
-    }
-    if (game.buttonCooldowns[22] > 0) {
-        document.getElementById("fight2Button").disabled = true
-        document.getElementById("fight2Button").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[22])
-    } else {
-        document.getElementById("fight2Button").disabled = false
-        document.getElementById("fight2Button").innerHTML = "Fight an area 2 foe "
-    }
-
     if (game.buttonCooldowns[23] > 0) {
     } else {
         autoPets()
-    }
-
-    if (game.buttonCooldowns[26] > 0) {
-        document.getElementById("fight3Button").disabled = true
-        document.getElementById("fight3Button").innerHTML = "Check back in " + numberToTime(game.buttonCooldowns[26])
-    } else {
-        document.getElementById("fight3Button").disabled = false
-        document.getElementById("fight3Button").innerHTML = "Fight an area 3 foe "
     }
 
     game.level = XPToLevel(Math.max(Math.floor(game.XP), 0))
@@ -450,8 +421,6 @@ function handleUnlocks() {
                 for (let i = 0; i < 9; i++) {
                     game.pets[i + 64] = 0
                 }
-            } else if (i == 24) {
-                document.getElementById("fight3Button").style.display = "block"
             }
             break
         }
@@ -460,9 +429,6 @@ function handleUnlocks() {
     if (game.itemUnlocks > game.extraUnlocks) {
         game.extraUnlocks += 1
         game.totalUnlocks = game.unlocks + game.extraUnlocks
-        if (game.extraUnlocks == 1) {
-            document.getElementById("fight2Button").style.display = "block"
-        }
     }
 
     if (game.totalUnlocks == game.possibleUnlocks) {

@@ -107,7 +107,6 @@ function startFight(x) {
                 totalWeight -= starterEnemiesChances[i][1]
             }
         }
-        game.buttonCooldowns[21] = 3600 / (game.itemCooldown) //1h
     }
     if (x == 2) {
         for (i = 0; i < intermediateEnemiesChances.length; i++) totalWeight += intermediateEnemiesChances[i][1]
@@ -119,7 +118,6 @@ function startFight(x) {
                 totalWeight -= intermediateEnemiesChances[i][1]
             }
         }
-        game.buttonCooldowns[22] = 21600 / (game.itemCooldown) //6h
     }
     if (x == 3) {
         for (i = 0; i < advancedEnemiesChances.length; i++) totalWeight += advancedEnemiesChances[i][1]
@@ -131,7 +129,6 @@ function startFight(x) {
                 totalWeight -= advancedEnemiesChances[i][1]
             }
         }
-        game.buttonCooldowns[26] = 86400 / (game.itemCooldown) //24h
     }
     if (document.getElementById("dailyMessagesDiv").style.display == "block") {
         openCloseMessages(0)

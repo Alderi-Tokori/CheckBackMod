@@ -322,6 +322,20 @@ class ModalButton extends Button {
     }
 }
 
+class FightingModalButton extends ModalButton {
+    constructor(selector, isVisible, modalButtonName, modalId, clickBehavior) {
+        super(selector, isVisible, modalButtonName, modalId, clickBehavior);
+    }
+
+    updateDisplay() {
+        super.updateDisplay();
+
+        document.querySelectorAll("#fightingDiv .modalActionButtons .button:not(.hidden):not([disabled])").length > 0 ?
+            document.querySelectorAll(this.selector).forEach((element) => element.classList.add("flickering")) :
+            document.querySelectorAll(this.selector).forEach((element) => element.classList.remove("flickering"));
+    }
+}
+
 // DailyRewardModalButton class
 class DailyRewardModalButton extends Button {
     constructor(selector, isVisible) {
@@ -375,6 +389,45 @@ class ClaimDailyRewardButton extends Button {
     }
 }
 
+class AreaFightButton extends Button {
+    constructor(selector, isVisible, areaIndex, baseCooldown) {
+        super(selector, isVisible);
+        this.areaIndex = areaIndex;
+        this.baseCooldown = baseCooldown;
+    }
+
+    calculateTotalCooldown() {
+        return this.baseCooldown / game.itemCooldown;
+    }
+
+    click() {
+        startFight(this.areaIndex);
+        game.buttonsAvailableAt[this.selector] = Date.now() + this.calculateTotalCooldown() * 1000;
+
+        this.updateDisplay();
+    }
+
+    mouseOver() {
+        displayEnemiesFightRarities(this.areaIndex);
+    }
+
+    mouseOut() {
+        displayEnemiesFightRarities(0);
+    }
+
+    isReady() {
+        return game.buttonsAvailableAt[this.selector] <= Date.now();
+    }
+
+    innerHtml() {
+        if (!this.isReady()) {
+            return "Check back in " + numberToTime((game.buttonsAvailableAt[this.selector] - Date.now()) / 1000);
+        }
+
+        return "Fight an area " + this.areaIndex + " foe";
+    }
+}
+
 const buttons = [
     new TabButton(".XPTabButton", () => game.highestLevel >= 8, "XP Buttons", "XPTab", () => {
         document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
@@ -398,7 +451,7 @@ const buttons = [
             displayEnemies();
         }
     }),
-    new ModalButton(".fightingModalButton", () => game.highestLevel >= 500, "Fighting", "fightingDiv", () => {
+    new FightingModalButton(".fightingModalButton", () => game.highestLevel >= 500, "Fighting", "fightingDiv", () => {
         if (! document.getElementById("fightingDiv").classList.contains("hidden")) {
             displayStats();
             document.querySelectorAll(".dropBox").forEach((element) => {
@@ -435,6 +488,9 @@ const buttons = [
     new XPBoostButton(".XPBoostButton3", () => game.highestLevel >= 400, 4, 3600, 400),
     new StatButton(".StatsButton1", () => game.highestLevel >= 500, 5, 3600),
     new StatButton(".StatsButton2", () => game.highestLevel >= 50000, 20, 21600),
+    new AreaFightButton("#fight1Button", () => game.highestLevel >= 500, 1, 3600),
+    new AreaFightButton("#fight2Button", () => game.items[6] > 0, 2, 21600),
+    new AreaFightButton("#fight3Button", () => game.highestLevel >= 100000, 3, 86400),
 ];
 
 onDomReady(function () {

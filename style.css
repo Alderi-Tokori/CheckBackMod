@@ -416,14 +416,6 @@ img {
   font-size: 2vh;
 }
 
-#fight2Button {
-  display: none;
-}
-
-#fight3Button {
-  display: none;
-}
-
 #statsDisplay {
   text-align: left;
   font-size: 20px;
