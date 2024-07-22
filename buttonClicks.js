@@ -516,7 +516,7 @@ onDomReady(function () {
         button.bindEvents();
     });
 
-    // Update the display of the buttons every 100ms
+    // Update the game state and display every 100ms
     setInterval(() => {
         buttons.forEach((button) => {
             button.updateDisplay();
@@ -526,5 +526,11 @@ onDomReady(function () {
         document.querySelectorAll(".UnboxPetsTab .button:not(.hidden)").length > 0 ?
             document.getElementById("selectedPetText").classList.remove("hidden") :
             document.getElementById("selectedPetText").classList.add("hidden");
+
+        // Updates the boosts from the shop
+        updateShopBoosts();
+
+        // Update XPBoost display
+        updateXPBoost();
     }, 100);
 });

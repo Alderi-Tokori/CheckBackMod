@@ -215,16 +215,6 @@ function loadGame(loadgame) {
     }
     changeTheme(game.currentTheme)
 
-    if (game.unlocks >= 13) {
-        updateXPBoost()
-    }
-    if (game.unlocks >= 21) {
-        enemiesChosen = 1
-    }
-    if (game.unlocks >= 22) {
-        updateShopBoosts()
-    }
-
     for (let i = 0; i < pets.length; i++) {
         if (!game.pets[i]) game.pets[i] = 0
     }
@@ -388,8 +378,6 @@ function updateXPBoost() {
     }
 }
 
-setInterval(updateXPBoost, 50)
-
 //Handles unlocks (Happens 60 times a second, could definitely be optimised!) - Demonin. Reply: I believe this is better now - Marc. Reply 2: It isn't - Marc
 function handleUnlocks() {
     for (i = 0; i < unlockLevels.length; i++) {
@@ -397,20 +385,7 @@ function handleUnlocks() {
             game.unlocks = i + 1
             game.totalUnlocks = game.unlocks + game.extraUnlocks
             //Could probably use a switch
-            if (i == 5) {
-                game.buttonCooldowns[6] = 0
-                game.buttonCooldowns[9] = 0
-            } else if (i == 7) {
-                document.getElementsByClassName("themeButton")[3].style.display = "inline-block"
-                document.getElementsByClassName("themeButton")[4].style.display = "inline-block"
-                document.getElementsByClassName("themeButton")[5].style.display = "inline-block"
-            } else if (i == 20) {
-                game.buttonCooldowns[20] = 0
-                game.buttonCooldowns[21] = 0
-                enemiesChosen = 1
-            } else if (i == 21) {
-                updateShopBoosts()
-            } else if (i == 22) {
+            if (i == 22) {
                 game.buttonCooldowns[24] = 0
                 for (let i = 0; i < 9; i++) {
                     game.pets[i + 64] = 0

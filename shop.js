@@ -489,8 +489,6 @@ function updateShopBoosts() {
     game.extraPetAmount = 0 + (game.items[16])
 }
 
-setInterval(updateShopBoosts, 50)
-
 function itemBoosts() {
     result = ""
     if (game.itemXP > 1) {
