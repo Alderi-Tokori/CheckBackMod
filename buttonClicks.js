@@ -2,20 +2,14 @@
  * Abstract base Button class
  */
 class Button {
-    constructor(
-        selector,
-        isVisible = () => true,
-        defaultInnerHtml = "",
-        clickBehavior = () => {},
-        mouseOverBehavior = () => {},
-        mouseOutBehavior = () => {}
-    ) {
+    constructor(selector) {
         this.selector = selector;
-        this.isVisible = isVisible;
-        this.defaultInnerHtml = defaultInnerHtml;
-        this.clickBehavior = clickBehavior;
-        this.mouseOverBehavior = mouseOverBehavior;
-        this.mouseOutBehavior = mouseOutBehavior;
+        this.defaultInnerHtml = "";
+
+        this.unlockLevel = 0;
+        this.unlockRequirement = () => true;
+
+        this.baseCooldown = 0;
     }
 
     bindEvents() {
@@ -41,7 +35,11 @@ class Button {
 
     // Will determine if the button is ready to be clicked
     isReady() {
-        return true;
+        return game.buttonsAvailableAt[this.selector] <= Date.now();
+    }
+
+    isVisible() {
+        return game.highestLevel >= this.unlockLevel && this.unlockRequirement();
     }
 
     // Returns the text to display on the button
@@ -57,12 +55,55 @@ class Button {
             element.innerHTML = this.innerHtml();
         });
     }
+
+    // Setters for clarity of use
+    setUnlockLevel(level) {
+        this.unlockLevel = level;
+
+        return this;
+    }
+
+    setUnlockRequirement(requirement) {
+        this.unlockRequirement = requirement;
+
+        return this;
+    }
+
+    setInnerHtml(innerHtml) {
+        this.defaultInnerHtml = innerHtml;
+
+        return this;
+    }
+
+    setClickBehavior(clickBehavior) {
+        this.clickBehavior = clickBehavior;
+
+        return this;
+    }
+
+    setMouseOverBehavior(mouseOverBehavior) {
+        this.mouseOverBehavior = mouseOverBehavior;
+
+        return this;
+    }
+
+    setMouseOutBehavior(mouseOutBehavior) {
+        this.mouseOutBehavior = mouseOutBehavior;
+
+        return this;
+    }
+
+    setBaseCooldown(cooldown) {
+        this.baseCooldown = cooldown;
+
+        return this;
+    }
 }
 
 // XPButton class
 class XPButton extends Button {
-    constructor(selector, isVisible, baseXp, baseCooldown) {
-        super(selector, isVisible);
+    constructor(selector, baseXp, baseCooldown) {
+        super(selector);
         this.baseXp = baseXp;
         this.baseCooldown = baseCooldown;
     }
@@ -76,15 +117,13 @@ class XPButton extends Button {
     }
 
     click() {
+        super.click();
+
         game.buttonClicks += 1;
         game.XP += this.calculateTotalXp();
         game.buttonsAvailableAt[this.selector] = Date.now() + this.calculateTotalCooldown() * 1000;
 
         this.updateDisplay();
-    }
-
-    isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now();
     }
 
     innerHtml() {
@@ -98,8 +137,8 @@ class XPButton extends Button {
 
 // XPBoostButton class
 class XPBoostButton extends Button {
-    constructor(selector, isVisible, baseXpBoost, baseCooldown, requiredLevel) {
-        super(selector, isVisible);
+    constructor(selector, baseXpBoost, baseCooldown, requiredLevel) {
+        super(selector);
         this.baseXpBoost = baseXpBoost;
         this.baseCooldown = baseCooldown;
         this.requiredLevel = requiredLevel;
@@ -114,6 +153,8 @@ class XPBoostButton extends Button {
     }
 
     click() {
+        super.click();
+
         if (game.items[12] === 1) { // Depends if you have the "xpboost buttons substract xp rather than resetting them"
             game.lostXP += levelToXP(this.requiredLevel)
             game.XP -= levelToXP(this.requiredLevel)
@@ -132,7 +173,7 @@ class XPBoostButton extends Button {
     }
 
     isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now() && game.level >= this.requiredLevel;
+        return super.isReady() && game.level >= this.requiredLevel;
     }
 
     innerHtml() {
@@ -154,8 +195,8 @@ class XPBoostButton extends Button {
 
 // StatButton class
 class StatButton extends Button {
-    constructor(selector, isVisible, baseStatGain, baseCooldown) {
-        super(selector, isVisible);
+    constructor(selector, baseStatGain, baseCooldown) {
+        super(selector);
         this.baseStatGain = baseStatGain;
         this.baseCooldown = baseCooldown;
     }
@@ -173,6 +214,8 @@ class StatButton extends Button {
     }
 
     click() {
+        super.click();
+
         game.HP += this.calculateTotalHPGain();
         game.DMG += this.calculateTotalDamageGain();
         game.DEF += this.calculateTotalDefenseGain();
@@ -182,10 +225,6 @@ class StatButton extends Button {
         game.buttonClicks += 1
 
         this.updateDisplay();
-    }
-
-    isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now();
     }
 
     innerHtml() {
@@ -199,11 +238,11 @@ class StatButton extends Button {
 
 // UnboxPetButton class
 class UnboxPetButton extends Button {
-    constructor(selector, isVisible, baseCooldown, xpBoostCost, coinCost, petRarityIndex, petRarityName) {
-        super(selector, isVisible);
+    constructor(selector, petRarityIndex, petRarityName, baseCooldown) {
+        super(selector);
         this.baseCooldown = baseCooldown;
-        this.xpBoostCost = xpBoostCost;
-        this.coinCost = coinCost;
+        this.xpBoostCost = 0;
+        this.coinCost = 0;
         this.petRarityIndex = petRarityIndex;
         this.petRarityName = petRarityName;
     }
@@ -221,6 +260,8 @@ class UnboxPetButton extends Button {
     }
 
     click() {
+        super.click();
+
         unboxPet(this.petRarityIndex, this.calculateNumberOfPetsToUnbox());
         game.buttonsAvailableAt[this.selector] = Date.now() + this.calculateTotalCooldown() * 1000;
 
@@ -228,15 +269,19 @@ class UnboxPetButton extends Button {
     }
 
     mouseOver() {
+        super.mouseOver();
+
         displayPetRarities(this.petRarityIndex);
     }
 
     mouseOut() {
+        super.mouseOut();
+
         displayPetRarities(0);
     }
 
     isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now() && (game.XPBoost - this.xpBoostCost >= 1) && (game.coins - this.coinCost >= 0);
+        return super.isReady() && (game.XPBoost - this.xpBoostCost >= 1) && (game.coins - this.coinCost >= 0);
     }
 
     innerHtml() {
@@ -280,12 +325,25 @@ class UnboxPetButton extends Button {
 
         return innerTextStr;
     }
+
+    // Setters for clarity of use
+    setXpBoostCost(cost) {
+        this.xpBoostCost = cost;
+
+        return this;
+    }
+
+    setCoinCost(cost) {
+        this.coinCost = cost;
+
+        return this;
+    }
 }
 
 // TabButton class
 class TabButton extends Button {
-    constructor(selector, isVisible, tabName, tabClass, clickBehavior) {
-        super(selector, isVisible, tabName, clickBehavior);
+    constructor(selector, tabClass) {
+        super(selector);
         this.tabClass = tabClass;
     }
 
@@ -310,8 +368,8 @@ class TabButton extends Button {
 
 // ModalButton class
 class ModalButton extends Button {
-    constructor(selector, isVisible, modalButtonName, modalId, clickBehavior) {
-        super(selector, isVisible, modalButtonName, clickBehavior);
+    constructor(selector, modalId) {
+        super(selector);
         this.modalId = modalId;
     }
 
@@ -323,8 +381,8 @@ class ModalButton extends Button {
 }
 
 class FightingModalButton extends ModalButton {
-    constructor(selector, isVisible, modalButtonName, modalId, clickBehavior) {
-        super(selector, isVisible, modalButtonName, modalId, clickBehavior);
+    constructor(selector, modalId) {
+        super(selector, modalId);
     }
 
     updateDisplay() {
@@ -338,11 +396,14 @@ class FightingModalButton extends ModalButton {
 
 // DailyRewardModalButton class
 class DailyRewardModalButton extends Button {
-    constructor(selector, isVisible) {
-        super(selector, isVisible, "Daily Reward");
+    constructor(selector) {
+        super(selector);
+        this.defaultInnerHtml = "Daily Reward";
     }
 
     click() {
+        super.click();
+
         document.getElementById("dailyRewardDiv").classList.toggle("hidden");
 
         if (! document.getElementById("dailyRewardDiv").classList.contains("hidden")) {
@@ -370,14 +431,12 @@ class ClaimDailyRewardButton extends Button {
     }
 
     click() {
+        super.click();
+
         claimDailyReward();
         game.buttonsAvailableAt[this.selector] = Date.now() + this.calculateTotalCooldown() * 1000;
 
         this.updateDisplay();
-    }
-
-    isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now();
     }
 
     innerHtml() {
@@ -390,8 +449,8 @@ class ClaimDailyRewardButton extends Button {
 }
 
 class AreaFightButton extends Button {
-    constructor(selector, isVisible, areaIndex, baseCooldown) {
-        super(selector, isVisible);
+    constructor(selector, areaIndex, baseCooldown) {
+        super(selector);
         this.areaIndex = areaIndex;
         this.baseCooldown = baseCooldown;
     }
@@ -401,6 +460,8 @@ class AreaFightButton extends Button {
     }
 
     click() {
+        super.click();
+
         startFight(this.areaIndex);
         game.buttonsAvailableAt[this.selector] = Date.now() + this.calculateTotalCooldown() * 1000;
 
@@ -408,15 +469,15 @@ class AreaFightButton extends Button {
     }
 
     mouseOver() {
+        super.mouseOver();
+
         displayEnemiesFightRarities(this.areaIndex);
     }
 
     mouseOut() {
-        displayEnemiesFightRarities(0);
-    }
+        super.mouseOut();
 
-    isReady() {
-        return game.buttonsAvailableAt[this.selector] <= Date.now();
+        displayEnemiesFightRarities(0);
     }
 
     innerHtml() {
@@ -429,29 +490,46 @@ class AreaFightButton extends Button {
 }
 
 class ThemeButton extends Button {
-    constructor(selector, isVisible, themeName) {
-        super(selector, isVisible, themeName);
+    constructor(selector, themeName) {
+        super(selector, themeName);
         this.themeName = themeName;
     }
 
     click() {
+        super.click();
+
         changeTheme(this.themeName);
     }
 }
 
 const buttons = [
-    new TabButton(".XPTabButton", () => game.highestLevel >= 8, "XP Buttons", "XPTab", () => {
-        document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
-    }),
-    new TabButton(".UnboxPetsTabButton", () => game.highestLevel >= 8, "Unbox new pets", "UnboxPetsTab", () => {
-        document.getElementById("petRarities").innerHTML = "Crate cooldown modifiers:" + CrateMultis();
-    }),
-    new TabButton(".XPBoostTabButton", () => game.highestLevel >= 100, "XP Boost Buttons", "XPBoostTab", () => {
-        document.getElementById("petRarities").innerHTML = "XPBoost: "+ XPBoostMultis();
-    }),
-    new TabButton(".StatsTabButton", () => game.highestLevel >= 500, "Stat Buttons", "StatsTab", () => {
-        document.getElementById("petRarities").innerHTML = "Stat gain multipliers: "+ StatMultis();
-    }),
+    new TabButton(".XPTabButton", "XPTab")
+        .setUnlockLevel(8)
+        .setInnerHtml("XP Buttons")
+        .setClickBehavior(() => {
+            document.getElementById("petRarities").innerHTML = "XP multipliers: " + XPmultis();
+        }),
+    new TabButton(".UnboxPetsTabButton", "UnboxPetsTab")
+        .setUnlockLevel(8)
+        .setInnerHtml("Unbox new pets")
+        .setClickBehavior(() => {
+            document.getElementById("petRarities").innerHTML = "Crate cooldown modifiers:" + CrateMultis();
+        }),
+    new TabButton(".XPBoostTabButton", "XPBoostTab")
+        .setUnlockLevel(100)
+        .setInnerHtml("XP Boost Buttons")
+        .setClickBehavior(() => {
+            document.getElementById("petRarities").innerHTML = "XPBoost: "+ XPBoostMultis();
+        }),
+    new TabButton(".StatsTabButton", "StatsTab")
+        .setUnlockLevel(500)
+        .setInnerHtml("Stat Buttons")
+        .setClickBehavior(() => {
+            document.getElementById("petRarities").innerHTML = "Stat gain multipliers: "+ StatMultis();
+        }),
+
+
+    // Todo: fix instanciation to use setters
     new ModalButton(".petsModalButton", () => game.highestLevel >= 8, "Pets", "petsDiv", () => {
         if (! document.getElementById("petsDiv").classList.contains("hidden")) {
             displayPets();
